@@ -67,10 +67,10 @@ public class ObjInfoServiceImpl implements ObjInfoService {
 		ObjInfo info = mongoTemplate.findOne(new Query().addCriteria(Criteria.where("objId").is(objInfo.getObjId())
 						.and("country").is(objInfo.getCountry())
 						.and("tagName").is(objInfo.getTagName())
-						.and("tagValue").is(objInfo.getTagName()))
+						.and("tagValue").is(objInfo.getTagValue()))
 				, ObjInfo.class);
-		//判断数据是否为空
-		if (info == null) {
+		//判断数据是否为空  数据为空则更新失败
+		if (info == null || info.getObjId() == null) {
 			logger.info("更新失败");
 			//具体操作应该是一个枚举值，自己维护
 			logInfo = new LogInfo(false,"更新失败","更新操作",objInfo.getObjId(),new Date());
