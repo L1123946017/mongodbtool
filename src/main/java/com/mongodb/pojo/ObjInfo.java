@@ -18,6 +18,13 @@ public class ObjInfo implements Serializable {
 	@Id
 	private String id;
 
+
+	/**
+	 * 对象id
+	 */
+	private String objId;
+
+
 	/**
 	 * 国家
 	 */

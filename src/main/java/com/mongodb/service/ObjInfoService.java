@@ -9,5 +9,5 @@ import com.mongodb.pojo.ObjInfo;
  * 对象数据处理服务
  */
 public interface ObjInfoService {
-	void updateOption(ObjInfo objInfo);
+	void updateOption(ObjInfo objInfo) throws Exception;
 }
