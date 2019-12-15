@@ -64,6 +64,7 @@ public class MongoDBServiceImpl implements MongoDBService {
 	 */
 	@Override
 	public void updateById(UserInfo userInfo) throws Exception {
+		mongoTemplate.save(userInfo);
 		repository.save(userInfo);
 	}
 }
