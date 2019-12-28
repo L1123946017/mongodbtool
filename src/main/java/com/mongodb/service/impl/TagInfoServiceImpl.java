@@ -3,7 +3,6 @@ package com.mongodb.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mongodb.common.ResponseData;
-import com.mongodb.dao.TagInfoRepository;
 import com.mongodb.pojo.TagInfo;
 import com.mongodb.service.TagInfoService;
 import org.slf4j.Logger;
@@ -12,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -37,16 +37,14 @@ public class TagInfoServiceImpl implements TagInfoService {
 
 
 	@Autowired
-	private TagInfoRepository repository;
-
-	@Autowired
 	private MongoTemplate mongoTemplate;
 
 	/**
 	 * 每天十点执行定时任务获取获取批量数据  获取前一天的数据
 	 */
 	@Scheduled(cron = "0 0 10 * * *")
-	public ResponseData scheduledRun() throws Exception{
+	@Async("taskExecutor")
+	public ResponseData scheduledRun() throws Exception {
 		//当前时间
 		Date nowDate = new Date();
 		Calendar calendar = Calendar.getInstance();
@@ -73,9 +71,9 @@ public class TagInfoServiceImpl implements TagInfoService {
 		ResponseData data = null;
 		try {
 			sendData(tagInfos);
-			data = new ResponseData(200,true,"发送成功");
+			data = new ResponseData(200, true, "发送成功");
 		} catch (Exception e) {
-			data = new ResponseData(400,false,"发送失败");
+			data = new ResponseData(400, false, "发送失败");
 			throw new Exception(JSON.toJSONString(data));
 		}
 		return data;
@@ -84,9 +82,10 @@ public class TagInfoServiceImpl implements TagInfoService {
 
 	/**
 	 * 执行数据发送操作
+	 *
 	 * @param infos
 	 */
-	public void sendData(List<TagInfo> infos) throws Exception{
+	public void sendData(List<TagInfo> infos) throws Exception {
 		String uri = "http://www.baidu.com";
 		try {
 			URL url = new URL(uri);

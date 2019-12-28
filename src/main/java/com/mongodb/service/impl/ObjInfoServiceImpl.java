@@ -54,12 +54,12 @@ public class ObjInfoServiceImpl implements ObjInfoService {
 	 * @param objInfo
 	 */
 	@Override
-	public void updateOption(ObjInfo objInfo) throws Exception{
+	public void updateOption(ObjInfo objInfo) throws Exception {
 		LogInfo logInfo = null;
 		//更新操作
 		mongoTemplate.updateFirst(new Query().addCriteria(Criteria.where("objId").is(objInfo.getObjId())
-								.and("country").is(objInfo.getCountry())
-								.and("tagName").is(objInfo.getTagName())),
+						.and("country").is(objInfo.getCountry())
+						.and("tagName").is(objInfo.getTagName())),
 				new Update().set("tagValue", objInfo.getTagValue()),
 				ObjInfo.class);
 		//以上操作不报错执行成功
@@ -73,7 +73,7 @@ public class ObjInfoServiceImpl implements ObjInfoService {
 		if (info == null || info.getObjId() == null) {
 			logger.info("更新失败");
 			//具体操作应该是一个枚举值，自己维护
-			logInfo = new LogInfo(false,"更新失败","更新操作",objInfo.getObjId(),new Date());
+			logInfo = new LogInfo(false, "更新失败", "更新操作", objInfo.getObjId(), new Date());
 			logInfoRepository.save(logInfo);
 
 			//抛出异常 中断操作
@@ -135,7 +135,7 @@ public class ObjInfoServiceImpl implements ObjInfoService {
 	 *
 	 * @param data
 	 */
-	@Async
+	@Async("taskExecutor")
 	public void sendData(ObjInfo data) {
 		LogInfo logInfo = null;
 		logger.info("异步任务发送数据开始");
@@ -174,7 +174,7 @@ public class ObjInfoServiceImpl implements ObjInfoService {
 			e.printStackTrace();
 			logger.info("异步任务推送数据执行失败");
 			//执行失败保存操作日志
-			logInfo = new LogInfo(false,"发送失败","异步发送数据",data.getObjId(),new Date());
+			logInfo = new LogInfo(false, "发送失败", "异步发送数据", data.getObjId(), new Date());
 			logInfoRepository.save(logInfo);
 
 		}

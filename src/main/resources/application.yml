@@ -10,3 +10,13 @@ spring:
       password: '1973'
       database: admin
       authentication-database: admin
+
+thread-pool:
+  core-pool-size: 10
+  max-pool-size: 15
+  queue-capacity: 2
+  keep-alive-seconds: 200
+  thread-name-prefix: 'thread-task'
+  shutdown: true
+
+
